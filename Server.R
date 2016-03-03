@@ -3,26 +3,26 @@ require(shiny)
 require(plotly)
 require(dplyr)
 
-#Store the data frame in a new data frame.
+#putting iris in a new df
 iris_df <- data.frame(iris)
 
 shinyServer(function(input, output) {
-  #Create an adjustable graph that depends on user input
+  
   output$barchart <- renderPlotly({
     
-    #filter the data based on user input for species
+    #filter data on user input for Species
     species <- switch(input$species, 
                            "setosa" = iris_df %>% filter(Species == "setosa"),
                            "versicolor" = iris_df %>% filter(Species == "versicolor"),
                            "virginica" = iris_df %>% filter(Species == "virginica"))
     
     
-    #select which width column
+    #select width column
     x_axis <- switch(input$x, 
                     "Sepal Width" = species$Sepal.Width,
                     "Petal Width" = iris_df$Petal.Width)
     
-    #select which length column
+    #select length column
     y_axis <- switch(input$y, 
                     "Sepal Length" = species$Sepal.Length,
                     "Petal Length" = iris_df$Petal.Length)
@@ -37,7 +37,6 @@ shinyServer(function(input, output) {
       mode = "markers",
       size = (area / 2), #I couldn't figure out how to get this to not display in the hover...
       color = "red"
-      #marker = list(color = toRGB("seagreen1"))
     ) %>%  
       layout(title = paste(input$x, "and", input$y), 
                   xaxis = list(title = paste(input$x )),
